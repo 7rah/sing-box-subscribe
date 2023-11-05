@@ -25,15 +25,11 @@ def parse(data):
             if netquery.get('tls') and netquery['tls'] != '':
                 node['tls']={
                     'enabled': True,
-                    'insecure': True,
+                    'insecure': False,
                     'server_name': netquery.get('peer', '')
                 }
                 if netquery.get('sni'):
                     node['tls']['server_name'] = netquery['sni']
-                    node['tls']['utls'] = {
-                        'enabled': True,
-                        'fingerprint': netquery.get('fp', '')
-                    }
             if netquery.get('obfs') == 'websocket':
                 node['transport'] = {
                     'type': 'ws',
@@ -73,10 +69,6 @@ def parse(data):
         }
         if item.get('sni'):
             node['tls']['server_name'] = item['sni']
-            node['tls']['utls'] = {
-                'enabled': True,
-                'fingerprint': item.get('fp', '')
-            }
     if item.get("net"):
         if item['net'] == 'hs':
             node['transport'] = {
@@ -104,7 +96,9 @@ def parse(data):
         if item['net'] == 'grpc':
             node['transport'] = {
                 'type':'grpc',
-                'service_name':item.get('path', '')
+                'service_name':item.get('path', ''),
+                "idle_timeout": "5s",
+                "ping_timeout": "5s"
             }
     if item.get('protocol'):
         node['multiplex'] = {
