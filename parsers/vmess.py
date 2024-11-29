@@ -96,9 +96,7 @@ def parse(data):
         if item['net'] == 'grpc':
             node['transport'] = {
                 'type':'grpc',
-                'service_name':item.get('path', ''),
-                "idle_timeout": "5s",
-                "ping_timeout": "5s"
+                'service_name':item.get('path', '')
             }
     if item.get('protocol'):
         node['multiplex'] = {
